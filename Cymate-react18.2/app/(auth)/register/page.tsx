@@ -97,6 +97,7 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
 
     // Validate all fields
     const newErrors: { [key: string]: string } = {};
@@ -105,19 +106,19 @@ export default function RegisterPage() {
       if (error) newErrors[key] = error;
     });
 
+    setErrors(newErrors);
+
     if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
+      setIsLoading(false);
       return;
     }
-
-    setIsLoading(true);
 
     try {
       const result = await authService.register(formData);
 
       if (result.success) {
-        toast.success("Success", {
-          description: result.message || "Registration successful",
+        toast.success("Registration Successful", {
+          description: "Please log in with your credentials",
         });
 
         // Redirect to login after successful registration

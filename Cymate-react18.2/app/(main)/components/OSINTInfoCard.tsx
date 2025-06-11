@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Globe, MapPin, Wifi, Server, Database, Flag, Loader, CheckCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { useToast } from "@/components/ui/use-toast"
+import { useToast } from "@/lib/hooks/use-toast"
 
 // Create a context or use an existing event system for notifications
 // This is a simple example using a custom event

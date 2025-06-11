@@ -44,7 +44,7 @@ import {
   LineChartIcon,
   Activity,
 } from "lucide-react"
-import { useToast } from "@/components/ui/use-toast"
+import { useToast } from "@/lib/hooks/use-toast"
 import { Spinner } from "@/components/ui/spinner"
 
 // Types

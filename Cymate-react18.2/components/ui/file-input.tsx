@@ -3,7 +3,7 @@
 import * as React from "react"
 import { Upload } from "lucide-react"
 import { Progress } from "@/components/ui/progress"
-import { useFileUpload } from "@/hooks/use-file-upload"
+import { useFileUpload } from "@/lib/hooks/use-file-upload"
 
 interface FileInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "value" | "onChange"> {
   onUploadComplete?: (result: any) => void

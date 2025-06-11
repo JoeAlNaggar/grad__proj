@@ -1,125 +1,189 @@
-import { AuthResponse, LoginCredentials, RegisterData } from "../types/auth";
+import axios from 'axios';
+import { AuthResponse, LoginCredentials, RegisterData, User } from "../types/auth";
 
 const API_BASE_URL = "http://127.0.0.1:8000";
+
+// Create axios instance with base configuration
+const api = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Add request interceptor to include auth token
+api.interceptors.request.use(
+  (config) => {
+    const token = authService.getToken();
+    if (token) {
+      config.headers.Authorization = `Token ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 export const authService = {
   async login(data: LoginCredentials): Promise<{ success: boolean; message?: string; token?: string; user?: any }> {
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/login/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      if (response.ok) {
-        // Try to get response data if available
-        const result = await response.json().catch(() => ({}));
-        
-        // Store token if provided
-        if (result.token) {
-          localStorage.setItem('auth_token', result.token);
-        }
-        
-        return {
-          success: true,
-          message: "Login successful",
-          token: result.token,
-          user: result.user
-        };
-      } else {
-        // Try to get error message from response
-        const errorData = await response.json().catch(() => ({}));
-        return { 
-          success: false, 
-          message: errorData.detail || errorData.message || "Login failed. Please check your credentials." 
-        };
+      const response = await api.post('/auth/login/', data);
+      
+      // Store token if provided
+      if (response.data.key) {
+        localStorage.setItem('auth_token', response.data.key);
       }
-    } catch (error) {
-      console.error("Login error:", error);
+      
+      return {
+        success: true,
+        message: "Login successful",
+        token: response.data.key,
+        user: response.data.user
+      };
+    } catch (error: any) {
+      const message = error.response?.data?.detail || 
+                    error.response?.data?.message || 
+                    "Login failed. Please check your credentials.";
       return { 
         success: false, 
-        message: "Network error. Please check your connection and try again." 
+        message 
       };
     }
   },
 
   async register(data: RegisterData): Promise<{ success: boolean; message?: string; token?: string; user?: any }> {
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/registration/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: data.username,
-          email: data.email,
-          password1: data.password,
-          password2: data.confirmPassword,
-          first_name: data.firstName,
-          last_name: data.lastName,
-        }),
-      });
+      const payload = {
+        username: data.username,
+        email: data.email,
+        password1: data.password,
+        password2: data.confirmPassword,
+        first_name: data.firstName,
+        last_name: data.lastName,
+      };
 
-      if (response.ok) {
-        const result = await response.json().catch(() => ({}));
-        
-        // Store token if provided
-        if (result.token) {
-          localStorage.setItem('auth_token', result.token);
-        }
-        
-        return {
-          success: true,
-          message: "Registration successful",
-          token: result.token,
-          user: result.user
-        };
-      } else {
-        const errorData = await response.json().catch(() => ({}));
-        return { 
-          success: false, 
-          message: errorData.detail || errorData.message || "Registration failed. Please try again." 
-        };
+      const response = await api.post('/auth/registration/', payload);
+      
+      // Store token if provided
+      if (response.data.key) {
+        localStorage.setItem('auth_token', response.data.key);
       }
-    } catch (error) {
-      console.error("Registration error:", error);
+      
+      return {
+        success: true,
+        message: "Registration successful",
+        token: response.data.key,
+        user: response.data.user
+      };
+    } catch (error: any) {
+      const message = error.response?.data?.detail || 
+                    error.response?.data?.message || 
+                    "Registration failed. Please try again.";
       return { 
         success: false, 
-        message: "Network error. Please check your connection and try again." 
+        message 
+      };
+    }
+  },
+
+  async logout(): Promise<{ success: boolean; message?: string }> {
+    try {
+      await api.post('/auth/logout/');
+      localStorage.removeItem('auth_token');
+      return {
+        success: true,
+        message: "Logged out successfully"
+      };
+    } catch (error: any) {
+      // Even if the API call fails, we should still clear the local token
+      localStorage.removeItem('auth_token');
+      return {
+        success: true,
+        message: "Logged out successfully"
+      };
+    }
+  },
+
+  async getUserDetails(): Promise<{ success: boolean; user?: User; message?: string }> {
+    try {
+      const response = await api.get('/auth/user/');
+      return {
+        success: true,
+        user: response.data
+      };
+    } catch (error: any) {
+      const message = error.response?.data?.detail || 
+                    error.response?.data?.message || 
+                    "Failed to fetch user details";
+      return { 
+        success: false, 
+        message 
       };
     }
   },
 
   async resetPassword(email: string): Promise<{ success: boolean; message?: string }> {
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/password-reset/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-
-      if (response.ok) {
-        return {
-          success: true,
-          message: "Password reset email sent successfully"
-        };
-      } else {
-        const errorData = await response.json().catch(() => ({}));
-        return { 
-          success: false, 
-          message: errorData.detail || errorData.message || "Password reset failed" 
-        };
-      }
-    } catch (error) {
-      console.error("Password reset error:", error);
+      await api.post('/auth/password/reset/', { email });
+      return {
+        success: true,
+        message: "Password reset email sent successfully"
+      };
+    } catch (error: any) {
+      const message = error.response?.data?.detail || 
+                    error.response?.data?.message || 
+                    "Password reset failed";
       return { 
         success: false, 
-        message: "Network error. Please try again." 
+        message 
       };
     }
   },
 
-  logout(): void {
-    localStorage.removeItem('auth_token');
-    window.location.href = '/login';
+  async resetPasswordConfirm(uid: string, token: string, newPassword: string): Promise<{ success: boolean; message?: string }> {
+    try {
+      const payload = {
+        uid,
+        token,
+        new_password1: newPassword,
+        new_password2: newPassword
+      };
+      await api.post('/auth/password/reset/confirm/', payload);
+      return {
+        success: true,
+        message: "Password reset successfully"
+      };
+    } catch (error: any) {
+      const message = error.response?.data?.detail || 
+                    error.response?.data?.message || 
+                    "Password reset confirmation failed";
+      return { 
+        success: false, 
+        message 
+      };
+    }
+  },
+
+  async changePassword(oldPassword: string, newPassword: string): Promise<{ success: boolean; message?: string }> {
+    try {
+      const payload = {
+        old_password: oldPassword,
+        new_password1: newPassword,
+        new_password2: newPassword
+      };
+      await api.post('/auth/password/change/', payload);
+      return {
+        success: true,
+        message: "Password changed successfully"
+      };
+    } catch (error: any) {
+      const message = error.response?.data?.detail || 
+                    error.response?.data?.message || 
+                    "Password change failed";
+      return { 
+        success: false, 
+        message 
+      };
+    }
   },
 
   getToken(): string | null {
@@ -131,5 +195,11 @@ export const authService = {
 
   isAuthenticated(): boolean {
     return !!this.getToken();
+  },
+
+  async redirectToLogin(): Promise<void> {
+    if (typeof window !== 'undefined') {
+      window.location.href = '/login';
+    }
   }
 };

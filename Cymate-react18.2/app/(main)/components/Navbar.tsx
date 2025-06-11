@@ -1,6 +1,6 @@
 "use client"
 
-import { Bell, Search, User, X, Menu } from "lucide-react"
+import { Bell, Search, User, X, Menu, LogOut, Settings } from "lucide-react"
 import NightModeToggle from "./NightModeToggle"
 import Link from "next/link"
 import Logo from "./Logo"
@@ -8,6 +8,7 @@ import { useState, useRef, useEffect } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { motion, AnimatePresence } from "framer-motion"
 import NotificationPortal from "./NotificationPortal"
+import { useAuth } from "../../contexts/AuthContext"
 
 interface Notification {
   name: string
@@ -49,6 +50,7 @@ const initialNotifications: Notification[] = [
 ]
 
 export default function Navbar() {
+  const { user, logout, isLoading } = useAuth()
   const [showNotifications, setShowNotifications] = useState(false)
   const [notifications, setNotifications] = useState<Notification[]>(initialNotifications)
   const [showProfileCard, setShowProfileCard] = useState(false)
@@ -98,9 +100,6 @@ export default function Navbar() {
   useEffect(() => {
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth < 768)
-      if (window.innerWidth >= 768) {
-        setIsSearchExpanded(true)
-      }
     }
 
     checkIfMobile()
@@ -114,7 +113,6 @@ export default function Navbar() {
   // Handle clicks outside of components
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      // Close notifications if clicked outside
       // Close profile card if clicked outside
       if (showProfileCard && profileRef.current && !profileRef.current.contains(event.target as Node)) {
         setShowProfileCard(false)
@@ -179,15 +177,35 @@ export default function Navbar() {
     setNotifications((prev) => [notification, ...prev])
   }
 
+  const handleLogout = async () => {
+    setShowProfileCard(false)
+    await logout()
+  }
+
+  // Get user initials for avatar
+  const getUserInitials = () => {
+    if (!user) return "U"
+    const firstName = user.first_name || ""
+    const lastName = user.last_name || ""
+    return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase() || user.username?.charAt(0).toUpperCase() || "U"
+  }
+
+  const getDisplayName = () => {
+    if (!user) return "User"
+    if (user.first_name && user.last_name) {
+      return `${user.first_name} ${user.last_name}`
+    }
+    return user.username || "User"
+  }
+
   return (
     <>
-      <nav className="bg-white dark:bg-gray-800 bg-opacity-10 backdrop-filter backdrop-blur-lg border-b border-white border-opacity-20 dark:border-gray-700 py-4 px-6 flex justify-between items-center">
+      <nav className="z-[300] bg-white dark:bg-gray-800 bg-opacity-10 backdrop-filter backdrop-blur-lg border-b border-white border-opacity-20 dark:border-gray-700 py-4 px-6 flex justify-between items-center">
         <div className="flex items-center space-x-2">
           {isMobile && (
             <button
               className="burger-menu relative z-50 w-10 h-10 flex items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 md:hidden"
               onClick={() => {
-                // This is a placeholder - the actual toggle function will be in Sidebar component
                 const event = new CustomEvent("toggle-sidebar")
                 window.dispatchEvent(event)
               }}
@@ -196,26 +214,8 @@ export default function Navbar() {
               <Menu className="w-6 h-6 text-purple-500" />
             </button>
           )}
-          <Logo className="mr-4" />
+          <Logo />
         </div>
-
-        {/* Desktop search bar - only visible on desktop */}
-        {!isMobile && (
-          <div ref={searchRef} className="relative group flex-1 max-w-md mx-4">
-            <div className="relative w-full">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-              </div>
-              <input
-                ref={searchInputRef}
-                type="text"
-                placeholder="Search..."
-                className="w-full py-2 pl-10 pr-4 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 dark:focus:ring-violet-400 transition-all duration-300 ease-in-out"
-                onClick={() => setIsSearchActive(true)}
-              />
-            </div>
-          </div>
-        )}
 
         <div className="flex items-center space-x-4">
           {/* Mobile search icon - only visible on mobile */}
@@ -247,7 +247,11 @@ export default function Navbar() {
               onClick={toggleProfileCard}
               onMouseEnter={() => setShowProfileCard(true)}
             >
-              <User className="w-5 h-5" />
+              <Avatar className="h-8 w-8">
+                <AvatarFallback className="bg-purple-500 text-white text-sm">
+                  {getUserInitials()}
+                </AvatarFallback>
+              </Avatar>
             </button>
 
             <AnimatePresence>
@@ -256,55 +260,59 @@ export default function Navbar() {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="absolute right-0 mt-2 w-72 bg-white dark:bg-gray-800 rounded-lg shadow-xl z-[200] overflow-hidden"
+                  className="absolute right-0 mt-2 w-72 bg-white dark:bg-gray-800 rounded-lg shadow-xl z-[9999] overflow-hidden"
                 >
                   <div className="p-4">
                     <div className="flex items-center space-x-3 mb-4">
                       <Avatar className="h-12 w-12 border-2 border-purple-500">
-                        <AvatarImage src="/placeholder.svg?height=48&width=48" alt="Profile" />
-                        <AvatarFallback>ZA</AvatarFallback>
+                        <AvatarFallback className="bg-purple-500 text-white">
+                          {getUserInitials()}
+                        </AvatarFallback>
                       </Avatar>
                       <div>
-                        <h3 className="font-medium text-gray-900 dark:text-gray-100">Zeyad Ahmed</h3>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">Cybersecurity Expert</p>
+                        <h3 className="font-medium text-gray-900 dark:text-gray-100">
+                          {getDisplayName()}
+                        </h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          {user?.email || "User"}
+                        </p>
                       </div>
                     </div>
 
                     <div className="space-y-1 mb-4">
                       <div className="flex justify-between text-sm">
-                        <span className="text-gray-500 dark:text-gray-400">Profile Completion</span>
-                        <span className="text-gray-900 dark:text-gray-100">85%</span>
+                        <span className="text-gray-500 dark:text-gray-400">Profile Status</span>
+                        <span className="text-green-600 dark:text-green-400">Active</span>
                       </div>
                       <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                         <div
                           className="h-full bg-gradient-to-r from-purple-500 to-blue-500 rounded-full"
-                          style={{ width: "85%" }}
+                          style={{ width: "100%" }}
                         ></div>
                       </div>
                     </div>
-
-                    <Link
-                      href="/settings/portfolio-setup"
-                      className="block w-full py-2 px-4 text-center text-white bg-purple-500 hover:bg-purple-600 rounded-md transition-colors duration-200"
-                    >
-                      Edit Profile
-                    </Link>
                   </div>
 
                   <div className="border-t border-gray-200 dark:border-gray-700 py-2">
                     <Link
-                      href="/settings/management"
+                      href="/settings"
                       className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
+                      <Settings className="w-4 h-4 mr-2" />
                       <span>Account Settings</span>
                     </Link>
                     <Link
-                      href="/portfolio"
+                      href="/profile"
                       className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
-                      <span>View Portfolio</span>
+                      <User className="w-4 h-4 mr-2" />
+                      <span>View Profile</span>
                     </Link>
-                    <button className="w-full flex items-center px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <button 
+                      onClick={handleLogout}
+                      className="w-full flex items-center px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
                       <span>Sign Out</span>
                     </button>
                   </div>

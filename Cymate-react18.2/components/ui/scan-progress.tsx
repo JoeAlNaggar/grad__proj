@@ -3,7 +3,7 @@
 import * as React from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Progress } from "@/components/ui/progress"
-import { useScanProgress } from "@/hooks/use-scan-progress"
+import { useScanProgress } from "@/lib/hooks/use-scan-progress"
 
 interface ScanProgressProps {
   scanType: string

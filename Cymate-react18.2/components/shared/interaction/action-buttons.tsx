@@ -2,7 +2,7 @@
 
 import { Share2, Bookmark, Eye, MessageSquare } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { toast } from "@/components/ui/use-toast"
+import { toast } from "@/lib/hooks/use-toast"
 import { motion } from "framer-motion"
 import { useState } from "react"
 import { cn } from "@/lib/utils"

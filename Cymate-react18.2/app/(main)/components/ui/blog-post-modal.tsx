@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import AnimatedAd from "../AnimatedAd"
 import { formatDistanceToNow } from "date-fns"
-import { toast } from "@/components/ui/use-toast"
+import { toast } from "@/lib/hooks/use-toast"
 
 interface BlogPostModalProps {
   blogData: any
