@@ -26,9 +26,9 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Select } from "@/components/ui/select"
-import { FileInput } from "@/components/ui/file-input"
+// import { Checkbox } from "@/components/ui/checkbox"
+// import { Select } from "@/components/ui/select"
+// import { FileInput } from "@/components/ui/file-input"
 import { ScanProgress } from "@/components/ui/scan-progress"
 import Link from "next/link"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -240,7 +240,7 @@ export default function NetworkScanning() {
         {scanningTools.map((tool, index) => (
           <motion.div
             key={index}
-            layout
+            // layout="position"
             className={`bg-white dark:bg-gray-800/30 backdrop-filter backdrop-blur-lg border border-white/20 dark:border-white/10 rounded-xl shadow-md overflow-hidden transition-all duration-300 cursor-pointer ${
               expandedTool === index ? "col-span-full" : ""
             }`}
@@ -271,47 +271,12 @@ export default function NetworkScanning() {
                     <div className="space-y-4 mt-4 border-t pt-4 border-gray-200 dark:border-gray-700">
                       {tool.inputs.map((input, inputIndex) => (
                         <div key={inputIndex} className="space-y-2">
-                          {input.type === "select" ? (
-                            <Select
-                              options={input.options}
-                              placeholder={input.placeholder}
-                              value={formData[input.key] || ""}
-                              onChange={(value) => handleInputChange(index, inputIndex, value)}
-                            />
-                          ) : input.type === "checkbox" ? (
-                            <div className="flex items-center space-x-2">
-                              <Checkbox
-                                id={`${tool.title}-${inputIndex}`}
-                                checked={formData[input.key] || false}
-                                onCheckedChange={(checked) => handleInputChange(index, inputIndex, checked)}
-                              />
-                              <label
-                                htmlFor={`${tool.title}-${inputIndex}`}
-                                className="text-sm text-gray-700 dark:text-gray-300"
-                              >
-                                {input.label}
-                              </label>
-                            </div>
-                          ) : input.type === "file" ? (
-                            <FileInput
-                              accept={input.accept}
-                              value={file}
-                              onChange={setFile}
-                              onUploadComplete={(result) => {
-                                toast({
-                                  title: "File uploaded successfully",
-                                  description: "Ready to start network scanning.",
-                                })
-                              }}
-                            />
-                          ) : (
-                            <Input
-                              type={input.type}
-                              placeholder={input.placeholder}
-                              value={formData[input.key] || ""}
-                              onChange={(e) => handleInputChange(index, inputIndex, e.target.value)}
-                            />
-                          )}
+                          <Input
+                            type={input.type}
+                            placeholder={input.placeholder}
+                            value={formData[input.key] || ""}
+                            onChange={(e) => handleInputChange(index, inputIndex, e.target.value)}
+                          />
                         </div>
                       ))}
                     </div>
