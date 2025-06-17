@@ -142,7 +142,7 @@ export default function RegisterPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-purple-600 flex flex-col">
       {/* Header */}
       <div className="p-5">
-        <div className="w-32 h-8 relative">
+        <div className="w-40 h-20 relative">
           <Image
             src="/logo.svg"
             alt="CyMate Logo"
@@ -154,7 +154,7 @@ export default function RegisterPage() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex items-center justify-center px-4 py-8">
+      <div className="flex-1 flex items-center justify-center px-4 pb-8">
         <div className="w-full max-w-6xl flex items-center gap-8">
           {/* Left Side - Illustration */}
           <div className="hidden lg:flex flex-1 justify-center">

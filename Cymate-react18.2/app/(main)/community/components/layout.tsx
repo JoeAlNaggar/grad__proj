@@ -1,9 +1,22 @@
 import type React from "react"
+import { Toaster } from "sonner"
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+interface LayoutProps {
+  children: React.ReactNode
+}
+
+export default function Layout({ children }: LayoutProps) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-100">
-      <main className="container mx-auto px-4 py-8">{children}</main>
+    <div className="dark:bg-transparent min-h-screen ">
+      <main className="container mx-auto px-4 py-8">
+        {children}
+      </main>
+      <Toaster 
+        position="top-right" 
+        richColors 
+        expand={true}
+        duration={4000}
+      />
 
       {/* Dark mode background effects */}
       <div className="fixed inset-0 -z-10 dark:bg-gray-900">

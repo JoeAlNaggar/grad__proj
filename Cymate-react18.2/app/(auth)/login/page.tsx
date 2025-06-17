@@ -64,12 +64,17 @@ export default function LoginPage() {
     }
 
     try {
-      const success = await login(formData.email, formData.password);
-      if (success) {
+      const result = await login(formData.email, formData.password);
+      if (result) {
+        toast.success("Login Successful", {
+          description: "Welcome back!",
+        });
         router.push("/dashboard");
       }
     } catch (error) {
-      console.error("Login error:", error);
+      toast.error("Login Failed", {
+        description: "please check your credentials and try again",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -93,7 +98,7 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-purple-600 flex flex-col">
       {/* Header */}
       <div className="p-5">
-        <div className="w-32 h-8 relative">
+        <div className="w-40 h-20 relative">
           <Image
             src="/logo.svg"
             alt="CyMate Logo"

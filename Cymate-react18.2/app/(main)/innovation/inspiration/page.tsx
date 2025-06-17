@@ -744,11 +744,11 @@ const InspirationPage: React.FC = () => {
   }, [])
 
   return (
-    <div className="p-8 bg-gray-50 min-h-screen">
+    <div className="p-8 bg-gray-50 min-h-screen dark:bg-transparent">
       <NoiseSVG />
-      <header className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-800 mb-2">Inspiration Station</h1>
-        <p className="text-gray-600">Ignite your tech creativity with cybersecurity and development inspiration</p>
+      <header className="mb-8 text-center">
+        <h1 className="text-4xl font-bold text-gray-800 mb-2 dark:text-white">Inspiration Station</h1>
+        <p className="text-gray-600 dark:text-white">Ignite your tech creativity with cybersecurity and development inspiration</p>
       </header>
 
       <div className="mb-8 flex flex-col gap-4">
@@ -756,7 +756,7 @@ const InspirationPage: React.FC = () => {
           <Input
             type="text"
             placeholder="Search for inspiration..."
-            className="w-full py-3 px-4 pr-12 rounded-xl bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg focus:outline-none focus:ring-2 focus:ring-purple-300 transition duration-300 ease-in-out shadow-lg"
+            className="dark:bg-gray-500 w-full py-3 px-4 pr-12 rounded-xl bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg focus:outline-none focus:ring-2 focus:ring-purple-300 transition duration-300 ease-in-out shadow-lg"
           />
           <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 h-6 w-6 text-gray-400" />
         </div>

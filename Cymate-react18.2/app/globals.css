@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Bagel+Fat+One&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -91,4 +93,25 @@
 .animate-gradient-xy {
   background-size: 200% 200%;
   animation: gradient-xy 10s ease infinite;
+}
+
+/* For Webkit browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000; /* Black background */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #8b5cf6; /* Purple-500 in Tailwind */
+  border-radius: 6px;
+  border: 3px solid #000; /* Matches the track color */
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #8b5cf6 #000; /* thumb and track color */
 }

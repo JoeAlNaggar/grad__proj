@@ -1,6 +1,5 @@
 import type React from "react"
-import "./globals.css"
-// import "../styles/scrollbar-hide.css"
+import "../globals.css"
 import { Inter } from "next/font/google"
 import Sidebar from "./components/Sidebar"
 import Navbar from "./components/Navbar"
