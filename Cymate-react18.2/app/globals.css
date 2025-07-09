@@ -115,3 +115,8 @@
   scrollbar-width: thin;
   scrollbar-color: #8b5cf6 #000; /* thumb and track color */
 }
+
+::selection {
+  background: #8b5cf6;
+  color: white;
+}

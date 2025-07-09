@@ -1,6 +1,5 @@
 import Link from "next/link"
 import { Shield, Wifi, Globe, AlertTriangle } from "lucide-react"
-
 const tools = [
 	{
 		name: "Malware Detection",
@@ -39,6 +38,7 @@ const tools = [
 export default function Toolkit() {
 	return (
     <div className="space-y-8">
+
       <div className="bg-gradient-to-r from-purple-700 to-indigo-800 text-white rounded-3xl p-8 shadow-xl">
         <h1 className="text-4xl font-bold mb-4">Cybersecurity Toolkit</h1>
         <p className="text-xl">
@@ -84,13 +84,7 @@ export default function Toolkit() {
             </div>
           </Link>
         ))}
-      </div>
 
-      {/* Dark mode background effects */}
-      <div className="fixed inset-0 -z-10 dark:bg-gray-900">
-        <div className="absolute top-0 left-0 w-1/3 h-1/3 bg-purple-500/10 rounded-full filter blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-blue-500/10 rounded-full filter blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/4 w-1/4 h-1/4 bg-pink-500/10 rounded-full filter blur-3xl animate-pulse delay-2000"></div>
       </div>
     </div>
   );

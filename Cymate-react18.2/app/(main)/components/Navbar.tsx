@@ -1,6 +1,6 @@
 "use client"
 
-import { Bell, Search, User, X, Menu, LogOut, Settings } from "lucide-react"
+import { Bell, Search, User, X, Menu, LogOut, Settings, Crown, CreditCard  } from "lucide-react"
 import NightModeToggle from "./NightModeToggle"
 import Link from "next/link"
 import Logo from "./Logo"
@@ -9,50 +9,22 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { motion, AnimatePresence } from "framer-motion"
 import NotificationPortal from "./NotificationPortal"
 import { useAuth } from "../../contexts/AuthContext"
-
-interface Notification {
-  name: string
-  description: string
-  icon: string
-  color: string
-  time: string
-}
-
-const initialNotifications: Notification[] = [
-  {
-    name: "New Vulnerability Detected",
-    description: "Critical security issue found in your network",
-    time: "15m ago",
-    icon: "🚨",
-    color: "#FF3D71",
-  },
-  {
-    name: "Threat Intelligence Update",
-    description: "New threat actor identified targeting your industry",
-    time: "1h ago",
-    icon: "🕵️",
-    color: "#FFB800",
-  },
-  {
-    name: "Security Patch Available",
-    description: "Important update for your cybersecurity tools",
-    time: "2h ago",
-    icon: "🛠️",
-    color: "#00C9A7",
-  },
-  {
-    name: "Phishing Attempt Blocked",
-    description: "Suspicious email prevented from reaching users",
-    time: "3h ago",
-    icon: "🛡️",
-    color: "#1E86FF",
-  },
-]
+import { useRouter } from "next/navigation"
+import type { Notification } from "../../types/Notification"
+import { 
+  getNotifications, 
+  markNotificationAsRead, 
+  markAllNotificationsAsRead
+} from "../../services/api"
+import { toast } from "sonner"
 
 export default function Navbar() {
   const { user, logout, isLoading } = useAuth()
+  const router = useRouter()
   const [showNotifications, setShowNotifications] = useState(false)
-  const [notifications, setNotifications] = useState<Notification[]>(initialNotifications)
+  const [currentTokens, setCurrentTokens] = useState<number | null>(null)
+  const [notifications, setNotifications] = useState<Notification[]>([])
+  const [notificationsLoading, setNotificationsLoading] = useState(false)
   const [showProfileCard, setShowProfileCard] = useState(false)
   const [isSearchExpanded, setIsSearchExpanded] = useState(false)
   const [isSearchActive, setIsSearchActive] = useState(false)
@@ -63,6 +35,26 @@ export default function Navbar() {
   const searchRef = useRef<HTMLDivElement>(null)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [notificationButtonRect, setNotificationButtonRect] = useState<DOMRect | null>(null)
+
+  // Fetch notifications when component mounts and initialize token count
+  useEffect(() => {
+    if (user) {
+      fetchNotifications()
+      setCurrentTokens(user.toolkit_tokens)
+    }
+  }, [user])
+
+  const fetchNotifications = async () => {
+    try {
+      setNotificationsLoading(true)
+      const response = await getNotifications()
+      setNotifications(response.results)
+    } catch (error) {
+      console.error('Failed to fetch notifications:', error)
+    } finally {
+      setNotificationsLoading(false)
+    }
+  }
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen)
@@ -81,18 +73,20 @@ export default function Navbar() {
     }
   }, [])
 
-  // Add this useEffect to handle notifications from OSINTInfoCard
+  // Listen for token updates from toolkit scans
   useEffect(() => {
-    const handleNotification = (event: CustomEvent) => {
-      if (event.detail) {
-        addNotification(event.detail)
-      }
+    const handleTokensUpdated = (event: CustomEvent) => {
+      const newTokenCount = event.detail.tokens;
+      console.log('🔄 Navbar received token update:', newTokenCount);
+      
+      // Update local token count for immediate UI update
+      setCurrentTokens(newTokenCount);
     }
 
-    window.addEventListener("notification" as any, handleNotification as EventListener)
+    window.addEventListener("tokensUpdated", handleTokensUpdated as EventListener)
 
     return () => {
-      window.removeEventListener("notification" as any, handleNotification as EventListener)
+      window.removeEventListener("tokensUpdated", handleTokensUpdated as EventListener)
     }
   }, [])
 
@@ -166,6 +160,11 @@ export default function Navbar() {
     }
     setShowNotifications(!showNotifications)
     setShowProfileCard(false)
+    
+    // Refresh notifications when opening
+    if (!showNotifications) {
+      fetchNotifications()
+    }
   }
 
   const toggleProfileCard = () => {
@@ -173,8 +172,37 @@ export default function Navbar() {
     setShowNotifications(false)
   }
 
-  const addNotification = (notification: Notification) => {
-    setNotifications((prev) => [notification, ...prev])
+  // Handle notification click - navigate to post and mark as read
+  const handleNotificationClick = async (notification: Notification) => {
+    try {
+      // Mark notification as read if not already read
+      if (!notification.is_read) {
+        await markNotificationAsRead(notification.id)
+        // Update local state
+        setNotifications(prev => 
+          prev.map(n => 
+            n.id === notification.id 
+              ? { ...n, is_read: true }
+              : n
+          )
+        )
+      }
+
+      // Navigate to the post if it exists
+      if (notification.post) {
+        router.push(`/community/post/${notification.post.id}`)
+      } else {
+        toast.info('No associated post found')
+      }
+    } catch (error) {
+      console.error('Failed to mark notification as read:', error)
+      toast.error('Failed to process notification')
+    }
+  }
+
+  // Handle notification updates from the portal
+  const handleNotificationUpdate = (updatedNotifications: Notification[]) => {
+    setNotifications(updatedNotifications)
   }
 
   const handleLogout = async () => {
@@ -198,6 +226,9 @@ export default function Navbar() {
     return user.username || "User"
   }
 
+  // Calculate unread notifications count
+  const unreadCount = notifications.filter(n => !n.is_read).length
+
   return (
     <>
       <nav className="z-[300] bg-white dark:bg-gray-800 bg-opacity-10 backdrop-filter backdrop-blur-lg border-b border-white border-opacity-20 dark:border-gray-700 py-4 px-6 flex justify-between items-center">
@@ -218,24 +249,19 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center space-x-4">
-          {/* Mobile search icon - only visible on mobile */}
-          {isMobile && (
-            <button
-              className="text-gray-500 dark:text-gray-400 hover:text-purple-500 dark:hover:text-purple-400 transition-colors duration-200"
-              onClick={toggleSearch}
-            >
-              <Search className="w-5 h-5" />
-            </button>
-          )}
-
+          
           <div className="relative">
             <button
               ref={notificationRef}
-              className="text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition-colors duration-200"
+              className="text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition-colors duration-200 relative"
               onClick={toggleNotifications}
             >
               <Bell className="w-5 h-5" />
-              <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
             </button>
           </div>
 
@@ -248,6 +274,10 @@ export default function Navbar() {
               onMouseEnter={() => setShowProfileCard(true)}
             >
               <Avatar className="h-8 w-8">
+                <AvatarImage 
+                  src={user?.profile_picture || "/placeholder-user.jpg"} 
+                  alt={getDisplayName()}
+                />
                 <AvatarFallback className="bg-purple-500 text-white text-sm">
                   {getUserInitials()}
                 </AvatarFallback>
@@ -264,7 +294,11 @@ export default function Navbar() {
                 >
                   <div className="p-4">
                     <div className="flex items-center space-x-3 mb-4">
-                      <Avatar className="h-12 w-12 border-2 border-purple-500">
+                      <Avatar className="h-12 w-12 ">
+                        <AvatarImage 
+                          src={user?.profile_picture || "/placeholder-user.jpg"} 
+                          alt={getDisplayName()}
+                        />
                         <AvatarFallback className="bg-purple-500 text-white">
                           {getUserInitials()}
                         </AvatarFallback>
@@ -274,40 +308,57 @@ export default function Navbar() {
                           {getDisplayName()}
                         </h3>
                         <p className="text-sm text-gray-500 dark:text-gray-400">
-                          {user?.email || "User"}
+                          @{user?.username || "User"}
                         </p>
                       </div>
                     </div>
 
-                    <div className="space-y-1 mb-4">
+                    <div className="space-y-[10px]">
                       <div className="flex justify-between text-sm">
-                        <span className="text-gray-500 dark:text-gray-400">Profile Status</span>
-                        <span className="text-green-600 dark:text-green-400">Active</span>
+                        <span className="text-gray-500 dark:text-gray-400">Toolkit Tokens Remaining</span>
+                        <span className="text-green-600 dark:text-green-400">{currentTokens ?? user?.toolkit_tokens ?? 0}/{(() => {
+                          const tokens = currentTokens ?? user?.toolkit_tokens ?? 0;
+                          if (tokens <= 50) return 50;       // Free tier
+                          if (tokens <= 250) return 250;    // Premium tier (50 + 200)
+                          return 1050;                       // Ultra tier (50 + 1000)
+                        })()}</span>
                       </div>
-                      <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                      <div className=" w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-gradient-to-r from-purple-500 to-blue-500 rounded-full"
-                          style={{ width: "100%" }}
+                          className="h-full bg-gradient-to-r from-purple-500 to-blue-500 rounded-full transition-all duration-300"
+                          style={{ width: `${(() => {
+                            const tokens = currentTokens ?? user?.toolkit_tokens ?? 0;
+                            const maxTokens = tokens <= 50 ? 50 : tokens <= 250 ? 250 : 1050;
+                            return (tokens / maxTokens) * 100;
+                          })()}%` }}
                         ></div>
                       </div>
                     </div>
                   </div>
 
                   <div className="border-t border-gray-200 dark:border-gray-700 py-2">
+                  <Link
+                      href="/settings?tab=account&subtab=billing"
+                      className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      <CreditCard className="w-4 h-4 mr-2" />
+                      <span>Purchase Toolkit Tokens</span>
+                    </Link>
                     <Link
                       href="/settings"
                       className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
                       <Settings className="w-4 h-4 mr-2" />
-                      <span>Account Settings</span>
+                      <span>Manage Settings</span>
                     </Link>
                     <Link
-                      href="/profile"
+                      href={`/profile/${user?.username}`}
                       className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
                       <User className="w-4 h-4 mr-2" />
-                      <span>View Profile</span>
+                      <span>View Your Profile</span>
                     </Link>
+                    
                     <button 
                       onClick={handleLogout}
                       className="w-full flex items-center px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -329,7 +380,9 @@ export default function Navbar() {
         onClose={() => setShowNotifications(false)}
         notifications={notifications}
         buttonRect={notificationButtonRect}
-        onAddNotification={addNotification}
+        onNotificationClick={handleNotificationClick}
+        onNotificationUpdate={handleNotificationUpdate}
+        isLoading={notificationsLoading}
       />
 
       {/* Search Modal */}

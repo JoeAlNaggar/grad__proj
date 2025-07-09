@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
+import { motion } from "framer-motion"
+
 import {
   Select,
   SelectContent,
@@ -175,171 +177,174 @@ export default function CreatePage() {
 
   return (
     <Layout>
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8 text-center">Create New Post</h1>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-8">
+                    <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 max-w-7xl mx-auto">
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Post Type Selection */}
-          <div className="space-y-2">
-            <Label htmlFor="post-type">Post Type</Label>
-            <Select value={postType} onValueChange={(value: "post" | "blog" | "question" | "event") => setPostType(value)}>
-              <SelectTrigger className="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg">
-                <SelectValue placeholder="Select post type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="post">Post</SelectItem>
-                <SelectItem value="blog">Blog</SelectItem>
-                <SelectItem value="question">Question</SelectItem>
-                <SelectItem value="event">Event</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-3xl font-bold mb-8 text-center text-gray-800 dark:text-white">Create New Post</h1>
 
-          {/* Title */}
-          <div className="space-y-2">
-            <Label htmlFor="title">Title</Label>
-            <Input
-              id="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Enter your post title..."
-              className="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg focus:bg-opacity-30 transition-all duration-300"
-              required
-            />
-          </div>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Post Type Selection */}
+            <div className="space-y-2">
+              <Label htmlFor="post-type" className="text-gray-700 dark:text-gray-300">Post Type</Label>
+              <Select value={postType} onValueChange={(value: "post" | "blog" | "question" | "event") => setPostType(value)}>
+                <SelectTrigger className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white" style={{ boxShadow: 'none' }}>
+                  <SelectValue placeholder="Select post type" />
+                </SelectTrigger>
+                <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
+                  <SelectItem value="post">Post</SelectItem>
+                  <SelectItem value="blog">Blog</SelectItem>
+                  <SelectItem value="question">Question</SelectItem>
+                  <SelectItem value="event">Event</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
-          {/* Content */}
-          <div className="space-y-2">
-            <Label htmlFor="content">Content </Label>
-            <Textarea
-              id="content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="What's on your mind? Share your thoughts, experiences, or questions..."
-              rows={8}
-              className="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg focus:bg-opacity-30 transition-all duration-300 resize-none"
-              required
-            />
-          </div>
+            {/* Title */}
+            <div className="space-y-2">
+              <Label htmlFor="title" className="text-gray-700 dark:text-gray-300">Title</Label>
+              <Input
+                id="title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Enter your post title..."
+                className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:ring-purple-300 dark:focus:ring-purple-300"
+                style={{ boxShadow: 'none' }}
+                required
+              />
+            </div>
 
-          {/* Image Upload */}
-          <div className="space-y-2">
-            <Label htmlFor="image">Image (Optional)</Label>
-            <div className="space-y-3">
-              <div className="flex items-center gap-4">
-                <Input
-                  id="image"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg focus:bg-opacity-30 transition-all duration-300 hover:cursor-pointer"
-                />
-                {/* <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => document.getElementById('image')?.click()}
-                  className="flex items-center gap-2"
-                >
-                  <Upload className="w-4 h-4" />
-                  Choose Image
-                </Button> */}
+            {/* Content */}
+            <div className="space-y-2">
+              <Label htmlFor="content" className="text-gray-700 dark:text-gray-300">Content</Label>
+              <Textarea
+                id="content"
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder="What's on your mind? Share your thoughts, experiences, or questions..."
+                rows={8}
+                className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:ring-purple-300 dark:focus:ring-purple-300 resize-none whitespace-pre-wrap"
+                style={{ boxShadow: 'none' }}
+                required
+              />
+            </div>
+
+            {/* Image Upload */}
+            <div className="space-y-2">
+              <Label htmlFor="image" className="text-gray-700 dark:text-gray-300">Image (Optional)</Label>
+              <div className="space-y-3">
+                <div className="flex items-center gap-4">
+                  <Input
+                    id="image"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white hover:cursor-pointer"
+                    style={{ boxShadow: 'none' }}
+                  />
+                </div>
+                
+                {/* Image Preview */}
+                {imagePreview && (
+                  <div className="relative inline-block">
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      className="max-w-sm max-h-64 rounded-lg border border-gray-300 dark:border-gray-600 object-cover"
+                    />
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="sm"
+                      onClick={removeImage}
+                      className="absolute top-2 right-2"
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                )}
               </div>
-              
-              {/* Image Preview */}
-              {imagePreview && (
-                <div className="relative inline-block">
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                    className="max-w-sm max-h-64 rounded-lg border border-white border-opacity-30 object-cover"
+            </div>
+
+            {/* Tags */}
+            <div className="space-y-2">
+              <Label htmlFor="tags" className="text-gray-700 dark:text-gray-300">Tags</Label>
+              <div className="space-y-3">
+                <div className="flex gap-2">
+                  <Input
+                    id="tags"
+                    value={currentTag}
+                    onChange={(e) => setCurrentTag(e.target.value)}
+                    onKeyPress={handleTagKeyPress}
+                    placeholder="Add a tag..."
+                    className="flex-1 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:ring-purple-300 dark:focus:ring-purple-300"
+                    style={{ boxShadow: 'none' }}
                   />
                   <Button
                     type="button"
-                    variant="destructive"
+                    onClick={addTag}
+                    disabled={!currentTag.trim()}
+                    variant="outline"
                     size="sm"
-                    onClick={removeImage}
-                    className="absolute top-2 right-2"
+                    className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
-                    <X className="w-4 h-4" />
+                    <Plus className="w-4 h-4" />
                   </Button>
                 </div>
-              )}
-            </div>
-          </div>
-
-          {/* Tags */}
-          <div className="space-y-2">
-            <Label htmlFor="tags">Tags</Label>
-            <div className="space-y-3">
-              <div className="flex gap-2">
-                <Input
-                  id="tags"
-                  value={currentTag}
-                  onChange={(e) => setCurrentTag(e.target.value)}
-                  onKeyPress={handleTagKeyPress}
-                  placeholder="Add a tag..."
-                  className="flex-1 bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg focus:bg-opacity-30 transition-all duration-300"
-                />
-                <Button
-                  type="button"
-                  onClick={addTag}
-                  disabled={!currentTag.trim()}
-                  variant="outline"
-                  size="sm"
-                >
-                  <Plus className="w-4 h-4" />
-                </Button>
-              </div>
-              
-              {/* Display current tags */}
-              {tags.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {tags.map((tag) => (
-                    <Badge
-                      key={tag}
-                      variant="secondary"
-                      className="bg-violet-500 bg-opacity-20 text-violet-800 hover:bg-opacity-30"
-                    >
-                      #{tag}
-                      <button
-                        type="button"
-                        onClick={() => removeTag(tag)}
-                        className="ml-1 hover:text-violet-600"
+                
+                {/* Display current tags */}
+                {tags.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {tags.map((tag) => (
+                      <Badge
+                        key={tag}
+                        variant="secondary"
+                        className="bg-purple-500 text-white px-3 py-1 rounded-full text-sm flex items-center"
+                        style={{ boxShadow: 'none' }}
                       >
-                        <X className="w-3 h-3" />
-                      </button>
-                    </Badge>
-                  ))}
-                </div>
-              )}
+                        #{tag}
+                        <button
+                          type="button"
+                          onClick={() => removeTag(tag)}
+                          className="ml-1 hover:text-purple-200 focus:outline-none"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
 
-          {/* Error Message */}
-          {error && (
-            <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-red-800 text-sm">{error}</p>
+            {/* Error Message */}
+            {error && (
+              <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                <p className="text-red-800 dark:text-red-400 text-sm">{error}</p>
+              </div>
+            )}
+
+            {/* Submit Button */}
+            <div className="flex justify-end pt-6">
+              <Button
+                type="submit"
+                disabled={isSubmitting || !content.trim() || !title.trim() || !tags.length}
+                className="px-8 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-full transition-all duration-300"
+                style={{ boxShadow: 'none' }}
+              >
+                {isSubmitting ? (
+                  <div className="flex items-center gap-2">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    Creating...
+                  </div>
+                ) : (
+                  "Create Post"
+                )}
+              </Button>
             </div>
-          )}
-
-          {/* Submit Button */}
-          <div className="flex justify-end pt-6">
-            <Button
-              type="submit"
-              disabled={isSubmitting || !content.trim()}
-              className="px-8 py-2 bg-violet-600 hover:bg-violet-700 focus:ring-violet-500"
-            >
-              {isSubmitting ? (
-                <div className="flex items-center gap-2">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                  Creating...
-                </div>
-              ) : (
-                "Create Post"
-              )}
-            </Button>
-          </div>
-        </form>
+          </form>
+        </div>
+        </motion.div>
       </div>
     </Layout>
   )

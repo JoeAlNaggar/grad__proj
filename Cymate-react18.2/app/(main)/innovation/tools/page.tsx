@@ -50,6 +50,15 @@ const tools: Tool[] = [
   },
   {
     id: 3,
+    name: "Symantec Endpoint Protection",
+    description: "A comprehensive premium solution for endpoint security and threat prevention",
+    image: "/placeholder.svg?height=200&width=300",
+    tags: ["Endpoint Security", "Threat Prevention"],
+    pricingModel: "Paid",
+    launchUrl: "https://www.broadcom.com/products/cybersecurity/endpoint",
+    },
+  {
+    id: 4,
     name: "Metasploit",
     description: "Advanced open-source platform for developing, testing, and executing exploit code",
     image: "/placeholder.svg?height=200&width=300",
@@ -58,7 +67,7 @@ const tools: Tool[] = [
     launchUrl: "https://www.metasploit.com/",
   },
   {
-    id: 4,
+    id: 5,
     name: "Nmap",
     description: "Network scanner used to discover hosts, services, and vulnerabilities",
     image: "/placeholder.svg?height=200&width=300",
@@ -67,7 +76,7 @@ const tools: Tool[] = [
     launchUrl: "https://nmap.org/",
   },
   {
-    id: 5,
+    id: 6,
     name: "Burp Suite",
     description: "Integrated platform for performing security testing of web applications",
     image: "/placeholder.svg?height=200&width=300",
@@ -76,7 +85,7 @@ const tools: Tool[] = [
     launchUrl: "https://portswigger.net/burp",
   },
   {
-    id: 6,
+    id: 7,
     name: "OWASP ZAP",
     description: "Open-source web application security scanner",
     image: "/placeholder.svg?height=200&width=300",
@@ -85,7 +94,7 @@ const tools: Tool[] = [
     launchUrl: "https://www.zaproxy.org/",
   },
   {
-    id: 7,
+    id: 8,
     name: "Snort",
     description: "Open-source intrusion prevention system capable of real-time traffic analysis",
     image: "/placeholder.svg?height=200&width=300",
@@ -94,7 +103,7 @@ const tools: Tool[] = [
     launchUrl: "https://www.snort.org/",
   },
   {
-    id: 8,
+    id: 9,
     name: "Aircrack-ng",
     description: "Network software suite for auditing wireless networks",
     image: "/placeholder.svg?height=200&width=300",
@@ -102,6 +111,7 @@ const tools: Tool[] = [
     pricingModel: "Free",
     launchUrl: "https://www.aircrack-ng.org/",
   },
+  
 ]
 
 export default function ToolStation() {
@@ -145,45 +155,45 @@ export default function ToolStation() {
         filterTags.every((tag) => tool.tags.some((toolTag) => toolTag.toLowerCase().includes(tag)))),
   )
 
-  const handleDownload = (tool: Tool) => {
-    toast({
-      title: "Download Started",
-      description: `Detailed functionality report for ${tool.name} is being downloaded.`,
-    })
-  }
 
   return (
     <div className="p-8 space-y-8 bg-gray-100 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white">Tool Station</h1>
+        <header className="text-center">
+          <h1 className="text-4xl font-bold text-gray-800 mb-2 dark:text-white">Tools Station</h1>
+          <p className="text-gray-600 dark:text-gray-300">Connect with top cybersecurity tools from trusted partners to enhance your digital security.</p>
+        </header>
           <div className="flex flex-col gap-4">
             <div className="relative">
               <Input
                 placeholder="Search tools..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full py-3 px-4 pr-12 rounded-xl bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg focus:outline-none focus:ring-2 focus:ring-purple-300 transition duration-300 ease-in-out shadow-lg"
+                className="w-full py-3 px-4 pr-12 rounded-xl bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-300 transition duration-300 ease-in-out dark:text-white"
+              style={{ boxShadow: 'none' }}
               />
               <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
             </div>
             <div className="relative flex items-center" ref={filterRef}>
               <Button
                 onClick={() => setShowFilterInput(!showFilterInput)}
-                className="flex items-center justify-center py-3 px-6 rounded-l-xl bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg text-gray-700 font-semibold shadow-lg hover:shadow-xl transition duration-300 ease-in-out"
+                className="flex items-center justify-center py-3 px-6 rounded-l-xl bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-300 ease-in-out"
+                style={{ boxShadow: 'none' }}
               >
                 <AdjustmentsHorizontalIcon className="h-5 w-5 mr-2" />
                 Filters
               </Button>
               {showFilterInput && (
-                <div className="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-r-xl shadow-lg">
+                <div className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-r-xl">
                   <Input
                     type="text"
                     value={filterInput}
                     onChange={(e) => setFilterInput(e.target.value)}
                     onKeyPress={handleFilterInput}
-                    placeholder="Filter with tags"
-                    className="w-64 py-3 px-4 rounded-r-xl bg-transparent focus:outline-none focus:ring-2 focus:ring-purple-300"
+                    placeholder="Filter by tags (press Enter)"
+                    className="w-64 py-3 px-4 rounded-r-xl bg-transparent focus:outline-none focus:ring-2 focus:ring-purple-300 dark:text-white"
+                    style={{ boxShadow: 'none' }}
                   />
                 </div>
               )}
@@ -213,9 +223,9 @@ export default function ToolStation() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.3 }}
-              className="relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              className="relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden transition-all duration-300 transform hover:scale-105"
               style={{
-                boxShadow: "5px 5px 15px rgba(0, 0, 0, 0.2), -5px -5px 15px rgba(255, 255, 255, 0.2)",
+                boxShadow: "none",
               }}
             >
               <div className="p-6 space-y-4">
@@ -233,14 +243,14 @@ export default function ToolStation() {
                     >
                       {tool.pricingModel}
                     </Badge>
-                    <Button
+                    {/* <Button
                       variant="ghost"
                       size="icon"
                       className="rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
                       onClick={() => handleDownload(tool)}
                     >
                       <Download className="w-4 h-4" />
-                    </Button>
+                    </Button> */}
                   </div>
                 </div>
                 <p className="text-gray-600 dark:text-gray-300 line-clamp-3">{tool.description}</p>
@@ -253,9 +263,9 @@ export default function ToolStation() {
                 </div>
                 <Button
                   onClick={() => setSelectedTool(tool)}
-                  className="bg-purple-500 hover:bg-purple-600 text-white rounded-full px-6 py-2 shadow-lg hover:shadow-purple-500/50 transition-all duration-300"
+                  className="bg-purple-500 hover:bg-purple-600 text-white rounded-full px-6 py-2  transition-all duration-300"
                   style={{
-                    boxShadow: "5px 5px 10px rgba(0, 0, 0, 0.2), -5px -5px 10px rgba(255, 255, 255, 0.2)",
+                    boxShadow: "none",
                   }}
                 >
                   Launch Tool <ChevronRight className="w-4 h-4 ml-2" />
@@ -267,7 +277,7 @@ export default function ToolStation() {
       </div>
 
       <Dialog open={!!selectedTool} onOpenChange={() => setSelectedTool(null)}>
-        <DialogContent className="bg-gray-100 dark:bg-gray-800 rounded-2xl shadow-2xl p-6">
+        <DialogContent className="bg-gray-100 dark:bg-gray-800 rounded-2xl  p-6">
           <DialogHeader>
             <DialogTitle className="text-2xl font-semibold text-gray-900 dark:text-white">
               {selectedTool?.name}
@@ -289,7 +299,7 @@ export default function ToolStation() {
                 window.open(selectedTool?.launchUrl, "_blank")
                 setSelectedTool(null)
               }}
-              className="bg-purple-500 hover:bg-purple-600 text-white rounded-full px-6 py-2 shadow-lg hover:shadow-purple-500/50 transition-all duration-300"
+              className="bg-purple-500 hover:bg-purple-600 text-white rounded-full px-6 py-2  transition-all duration-300"
             >
               Launch Tool
               <ExternalLink className="w-4 h-4 ml-2" />

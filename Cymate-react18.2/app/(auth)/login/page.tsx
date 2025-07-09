@@ -69,7 +69,7 @@ export default function LoginPage() {
         toast.success("Login Successful", {
           description: "Welcome back!",
         });
-        router.push("/dashboard");
+        // Let RouteGuard handle the redirect to prevent race conditions
       }
     } catch (error) {
       toast.error("Login Failed", {
@@ -80,18 +80,8 @@ export default function LoginPage() {
     }
   };
 
-  const handleResetPassword = async () => {
-    if (!formData.email) {
-      toast.error("Email Required", {
-        description: "Please enter your email first",
-      });
-      return;
-    }
-
-    // This would use authService.resetPassword but let's keep it simple for now
-    toast.info("Password Reset", {
-      description: "Password reset functionality coming soon",
-    });
+  const handleResetPassword = () => {
+    router.push("/forgot-password");
   };
 
   return (
@@ -200,15 +190,16 @@ export default function LoginPage() {
                   {isLoading ? "Logging in..." : "Login"}
                 </button>
 
-                {/* Reset Password Button */}
-                <button
-                  type="button"
-                  onClick={handleResetPassword}
-                  disabled={isLoading}
-                  className="w-full bg-black/50 text-purple-400 font-medium text-xl py-3 rounded-xl border border-gray-600/30 hover:bg-purple-500 hover:text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Reset your password
-                </button>
+                {/* Forgot Password Link */}
+                <div className="text-center">
+                  <button
+                    type="button"
+                    onClick={handleResetPassword}
+                    className="text-purple-400 font-medium hover:underline text-sm"
+                  >
+                    Forgot your password?
+                  </button>
+                </div>
 
                 {/* Sign Up Link */}
                 <p className="text-white text-center">

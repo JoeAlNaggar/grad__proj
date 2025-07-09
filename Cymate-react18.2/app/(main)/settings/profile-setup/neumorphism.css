@@ -1,0 +1,250 @@
+/* Base styles */
+.bg-neugray {
+  background-color: #f0f2f5;
+}
+
+/* Neumorphic card */
+.neu-card {
+  background: #f0f2f5;
+  border-radius: 20px;
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1), -10px -10px 20px rgba(255, 255, 255, 0.8);
+}
+
+/* Neumorphic input fields */
+.neu-input {
+  background: #f0f2f5;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 10px;
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.1), inset -4px -4px 8px rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+}
+
+.neu-input:focus {
+  outline: none;
+  box-shadow: inset 6px 6px 10px rgba(0, 0, 0, 0.1), inset -6px -6px 10px rgba(255, 255, 255, 0.8);
+}
+
+/* Neumorphic inset elements */
+.neu-inset {
+  background: #f0f2f5;
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.1), inset -4px -4px 8px rgba(255, 255, 255, 0.8);
+}
+
+/* Neumorphic buttons */
+.neu-button {
+  background: #f0f2f5;
+  border: none;
+  border-radius: 50px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1), -5px -5px 10px rgba(255, 255, 255, 0.8);
+  transition: all 0.2s ease;
+}
+
+.neu-button:hover {
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1), -3px -3px 6px rgba(255, 255, 255, 0.8);
+}
+
+.neu-button:active {
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.1), inset -3px -3px 6px rgba(255, 255, 255, 0.8);
+}
+
+/* Primary neumorphic button */
+.neu-button-primary {
+  background: #6b5ce7;
+  border: none;
+  color: white;
+  border-radius: 50px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2), -5px -5px 10px rgba(255, 255, 255, 0.1), inset 0 0 0 rgba(0, 0, 0, 0),
+    inset 0 0 0 rgba(255, 255, 255, 0);
+  transition: all 0.2s ease;
+}
+
+.neu-button-primary:hover {
+  background: #5a4bd1;
+}
+
+.neu-button-primary:active {
+  background: #4a3bb8;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0.2), 0 0 0 rgba(255, 255, 255, 0.1), inset 3px 3px 6px rgba(0, 0, 0, 0.2), inset -3px
+    -3px 6px rgba(255, 255, 255, 0.1);
+}
+
+/* Neumorphic badge */
+.neu-badge {
+  background: #f0f2f5;
+  border-radius: 20px;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1), -3px -3px 6px rgba(255, 255, 255, 0.8);
+}
+
+/* Neumorphic icon */
+.neu-icon {
+  background: #f0f2f5;
+  border-radius: 50%;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1), -2px -2px 4px rgba(255, 255, 255, 0.8);
+}
+
+/* 3D Card Styles */
+.perspective-container {
+  perspective: 1000px;
+  width: 100%;
+  height: 100%;
+}
+
+.card-3d-wrapper {
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.1s ease-out;
+}
+
+.neu-card-3d {
+  background: #f0f2f5;
+  border-radius: 20px;
+  box-shadow:
+    10px 10px 20px rgba(0, 0, 0, 0.1),
+    -10px -10px 20px rgba(255, 255, 255, 0.8),
+    inset 0px 0px 0px rgba(0, 0, 0, 0.05),
+    inset 0px 0px 0px rgba(255, 255, 255, 0.3);
+  transform-style: preserve-3d;
+}
+
+.neu-inset-3d {
+  background: #f0f2f5;
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.1), inset -4px -4px 8px rgba(255, 255, 255, 0.8);
+  transform-style: preserve-3d;
+  transform: translateZ(5px);
+}
+
+.neu-badge-3d {
+  background: #f0f2f5;
+  border-radius: 20px;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1), -3px -3px 6px rgba(255, 255, 255, 0.8);
+  transform-style: preserve-3d;
+  transform: translateZ(10px);
+}
+
+.neu-icon-3d {
+  background: #f0f2f5;
+  border-radius: 50%;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1), -2px -2px 4px rgba(255, 255, 255, 0.8);
+  transform-style: preserve-3d;
+  transform: translateZ(8px);
+}
+
+.card-shine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 60%);
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Platform Design Styles */
+.platform-card {
+  background: transparent;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  transform-style: preserve-3d;
+}
+
+.platform-level-1,
+.platform-level-2,
+.platform-level-3,
+.platform-level-4 {
+  transition: transform 0.2s ease-out;
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.platform-level-1 {
+  z-index: 40;
+  transform: translateZ(10px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.platform-level-2 {
+  z-index: 30;
+  transform: translateZ(20px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.platform-level-3 {
+  z-index: 20;
+  transform: translateZ(30px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.platform-level-4 {
+  z-index: 10;
+  transform: translateZ(40px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.profile-image-platform {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid white;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transform: translateZ(15px);
+  transform-style: preserve-3d;
+  background-color: #f0f0f0;
+}
+
+.platform-badge {
+  background: white;
+  padding: 6px 12px;
+  border-radius: 30px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transform: translateZ(10px);
+  transform-style: preserve-3d;
+}
+
+.platform-content-box {
+  transform-style: preserve-3d;
+  transform: translateZ(5px);
+}
+
+.platform-contact-item {
+  transform-style: preserve-3d;
+  transform: translateZ(5px);
+}
+
+.platform-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transform: translateZ(10px);
+  transform-style: preserve-3d;
+}
+
+.perspective-container {
+  perspective: 1200px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-3d-wrapper {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  transform-style: preserve-3d;
+  transition: transform 0.2s ease-out;
+}

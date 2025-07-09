@@ -90,10 +90,11 @@ export default function PostDetailPage() {
   }
 
   return (
-    <Layout>
-      <div className="max-w-4xl mx-auto">
+    <div className="p-8 bg-gray-50 min-h-screen dark:bg-gray-900">
+      <Layout>
+        <div className="max-w-4xl mx-auto">
         {/* Navigation Header */}
-        <div className="flex items-center justify-between mb-6">
+        {/* <div className="flex items-center justify-between mb-6">
           <Button
             variant="ghost"
             onClick={() => router.back()}
@@ -112,29 +113,29 @@ export default function PostDetailPage() {
               Share Post
             </Button>
           )}
-        </div>
+        </div> */}
 
         {/* Content */}
         {loading ? (
           <div className="flex justify-center items-center min-h-[400px]">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-500 mx-auto mb-4"></div>
-              <p className="text-gray-600">Loading post...</p>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-500 dark:border-violet-400 mx-auto mb-4"></div>
+              <p className="text-gray-600 dark:text-gray-300">Loading post...</p>
             </div>
           </div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
-            <AlertCircle className="w-16 h-16 text-red-500 mb-4" />
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Oops!</h2>
-            <p className="text-gray-600 mb-6">{error}</p>
-            <div className="flex gap-4">
-              <Button onClick={() => router.push('/community')} variant="outline">
-                Back to Community
-              </Button>
-              <Button onClick={fetchPost}>
-                Try Again
-              </Button>
-            </div>
+            <AlertCircle className="w-16 h-16 text-red-500 dark:text-red-400 mb-4" />
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Oops!</h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">{error}</p>
+                          <div className="flex gap-4">
+                <Button onClick={() => router.push('/community')} variant="outline" className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700" style={{ boxShadow: 'none' }}>
+                  Back to Community
+                </Button>
+                <Button onClick={fetchPost} className="bg-violet-600 dark:bg-violet-600 hover:bg-violet-700 dark:hover:bg-violet-700 text-white" style={{ boxShadow: 'none' }}>
+                  Try Again
+                </Button>
+              </div>
           </div>
         ) : post ? (
           <div className="space-y-6">
@@ -142,17 +143,23 @@ export default function PostDetailPage() {
             <div className="max-w-2xl mx-auto">
               <Card 
                 {...post}
+                showTruncated={false}
                 onUpdate={handlePostUpdate}
               />
             </div>
 
             {/* Additional Post Information */}
-            <div className="max-w-2xl mx-auto bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-xl p-6 border border-white border-opacity-30">
+            {/* <div className="max-w-2xl mx-auto bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-xl p-6 border border-white border-opacity-30">
               <h3 className="text-lg font-semibold mb-4 text-gray-900">Post Details</h3>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
                   <span className="text-gray-600">Author:</span>
-                  <span className="ml-2 font-medium text-gray-900">{post.author}</span>
+                  <span className="ml-2 font-medium text-gray-900">
+                    {typeof post.author === 'string' 
+                      ? post.author 
+                      : `${post.author.first_name} ${post.author.last_name}`.trim() || post.author.username
+                    }
+                  </span>
                 </div>
                 <div>
                   <span className="text-gray-600">Post Type:</span>
@@ -198,28 +205,34 @@ export default function PostDetailPage() {
                   </div>
                 )}
               </div>
-            </div>
+            </div> */}
 
             {/* Related Posts or Actions */}
             <div className="max-w-2xl mx-auto text-center">
-              <p className="text-gray-600 mb-4">Enjoying this post?</p>
-              <div className="flex justify-center gap-4">
-                <Button 
-                  onClick={() => router.push('/community')}
-                  variant="outline"
-                >
-                  Explore More Posts
-                </Button>
-                <Button 
-                  onClick={() => router.push('/create')}
-                >
-                  Create Your Own Post
-                </Button>
-              </div>
+              <p className="text-gray-600 dark:text-gray-300 mb-4">Enjoying this post?</p>
+                              <div className="flex justify-center gap-4">
+                  <Button onClick={handleShare} className="flex items-center gap-2 bg-violet-600 dark:bg-violet-600 hover:bg-violet-700 dark:hover:bg-violet-700 text-white" style={{ boxShadow: 'none' }}> Share Post </Button>
+                  <Button 
+                    onClick={() => router.push('/community')}
+                    variant="outline"
+                    className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700"
+                    style={{ boxShadow: 'none' }}
+                  >
+                    Explore More Posts
+                  </Button>
+                  <Button 
+                    onClick={() => router.push('/create')}
+                    className="bg-violet-600 dark:bg-violet-600 hover:bg-violet-700 dark:hover:bg-violet-700 text-white"
+                    style={{ boxShadow: 'none' }}
+                  >
+                    Create Your Own Post
+                  </Button>
+                </div>
             </div>
           </div>
         ) : null}
-      </div>
-    </Layout>
+        </div>
+      </Layout>
+    </div>
   )
 } 

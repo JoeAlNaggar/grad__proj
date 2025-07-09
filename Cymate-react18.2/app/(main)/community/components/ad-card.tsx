@@ -27,7 +27,7 @@ export default function AdCard({ title, description, imageUrl, link, tags }: AdC
         </div>
       </div>
       <div className="px-4 pb-4">
-        <div className="flex justify-between items-center mb-2">
+        {/* <div className="flex justify-between items-center mb-2">
           <button className="flex items-center space-x-1 text-gray-500">
             <Zap size={16} />
             <span>0</span>
@@ -35,7 +35,7 @@ export default function AdCard({ title, description, imageUrl, link, tags }: AdC
           <button className="text-gray-500 hover:text-red-500" title="Report this ad">
             <AlertTriangle size={16} />
           </button>
-        </div>
+        </div> */}
         <a
           href={link}
           target="_blank"

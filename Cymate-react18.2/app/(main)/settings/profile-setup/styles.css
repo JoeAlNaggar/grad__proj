@@ -1,0 +1,52 @@
+.neumorphism-card {
+  background: #f0f0f0;
+  border-radius: 20px;
+  box-shadow: 20px 20px 60px #cccccc, -20px -20px 60px #ffffff;
+}
+
+.dark .neumorphism-card {
+  background: #1a1a1a;
+  box-shadow: 20px 20px 60px #0d0d0d, -20px -20px 60px #272727;
+}
+
+.neumorphism-input {
+  background: #f0f0f0;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 15px;
+  box-shadow: inset 5px 5px 10px #cccccc, inset -5px -5px 10px #ffffff;
+}
+
+.dark .neumorphism-input {
+  background: #1a1a1a;
+  box-shadow: inset 5px 5px 10px #0d0d0d, inset -5px -5px 10px #272727;
+}
+
+.neumorphism-button {
+  background: linear-gradient(145deg, #f0f0f0, #e6e6e6);
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  box-shadow: 5px 5px 10px #cccccc, -5px -5px 10px #ffffff;
+  transition: all 0.3s ease;
+}
+
+.neumorphism-button:hover {
+  box-shadow: 2px 2px 5px #cccccc, -2px -2px 5px #ffffff;
+}
+
+.dark .neumorphism-button {
+  background: linear-gradient(145deg, #1a1a1a, #232323);
+  box-shadow: 5px 5px 10px #0d0d0d, -5px -5px 10px #272727;
+}
+
+.dark .neumorphism-button:hover {
+  box-shadow: 2px 2px 5px #0d0d0d, -2px -2px 5px #272727;
+}
+
+.glassmorphism {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}

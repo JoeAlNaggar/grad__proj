@@ -138,18 +138,18 @@ export default function SecurityTips() {
           <Shield className="w-6 h-6 text-purple-500" />
           <h2 className="text-2xl font-bold">Security Tips</h2>
         </div>
-        <Button
+        {/* <Button
           variant="ghost"
           size="icon"
           onClick={() => setShowAddForm(!showAddForm)}
           className="rounded-full hover:bg-purple-100 dark:hover:bg-purple-900/20"
         >
           <Plus className="w-5 h-5 text-purple-500" />
-        </Button>
+        </Button> */}
       </div>
 
       {/* Add New Tip Form */}
-      {showAddForm && (
+      {/* {showAddForm && (
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 mb-6 border border-gray-200 dark:border-gray-700 shadow-sm">
           <h3 className="text-lg font-semibold mb-4">Add New Security Tip</h3>
           <div className="space-y-4">
@@ -219,7 +219,7 @@ export default function SecurityTips() {
             </Button>
           </div>
         </div>
-      )}
+      )} */}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {tips.map((tip) => (
@@ -236,14 +236,14 @@ export default function SecurityTips() {
             {tip.backgroundImage && <div className="absolute inset-0 bg-black/40"></div>}
 
             {/* Delete Button */}
-            <Button
+            {/* <Button
               variant="ghost"
               size="icon"
               onClick={() => deleteTip(tip.id)}
               className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/20 hover:bg-black/40 text-white opacity-0 group-hover:opacity-100 transition-opacity z-20"
             >
               <Trash2 className="w-4 h-4" />
-            </Button>
+            </Button> */}
 
             {/* Decorative Background Elements */}
             {tip.decoration === "circles" && (

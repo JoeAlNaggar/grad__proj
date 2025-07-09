@@ -114,22 +114,31 @@ export default function RegisterPage() {
     }
 
     try {
-      const result = await authService.register(formData);
+      console.log('📤 Sending verification code to email:', formData.email); // Debug log
+      
+      // Store form data in sessionStorage for verification page
+      sessionStorage.setItem('registrationData', JSON.stringify(formData));
+      
+      const result = await authService.sendVerificationCode(formData.email, 'registration');
+
+      console.log('📥 Send verification code result:', result); // Debug log
 
       if (result.success) {
-        toast.success("Registration Successful", {
-          description: "Please log in with your credentials",
+        toast.success("Verification Code Sent", {
+          description: "Please check your email for the verification code",
         });
 
-        // Redirect to login after successful registration
-        router.push("/login");
+        // Redirect to verification page with slight delay to prevent race condition
+        setTimeout(() => {
+          router.push("/verify-email");
+        }, 150);
       } else {
-        toast.error("Registration Failed", {
-          description:
-            result.message || "Registration failed. Please try again.",
+        toast.error("Failed to Send Code", {
+          description: result.message || "Failed to send verification code. Please try again.",
         });
       }
     } catch (error) {
+      console.error('💥 Unexpected error sending verification code:', error); // Debug log
       toast.error("Error", {
         description: "An unexpected error occurred. Please try again.",
       });

@@ -34,6 +34,7 @@ import Link from "next/link"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { toast } from "@/lib/hooks/use-toast"
 import { motion, AnimatePresence } from "framer-motion"
+import { modifyToolkitTokens } from "@/app/services/api"
 
 const API_BASE_URL = 'http://localhost:3000/network';
 
@@ -165,7 +166,7 @@ export default function NetworkScanning() {
         params: formData,
       });
   
-      handleScanComplete(response.data);
+      await handleScanComplete(response.data);
       toast({
         title: "Scan Complete",
         description: "Network scan completed successfully.",
@@ -181,9 +182,23 @@ export default function NetworkScanning() {
     }
   };
 
-  const handleScanComplete = (result: any) => {
+  const handleScanComplete = async (result: any) => {
     setIsScanning(false);
     setResult(JSON.stringify(result, null, 2));
+    
+    // Deduct 1 toolkit token after successful scan
+    try {
+      const newTokenCount = await modifyToolkitTokens('deduct', 1);
+      console.log('🎫 Token deducted, remaining tokens:', newTokenCount);
+      
+      // Trigger a custom event to update the navbar
+      window.dispatchEvent(new CustomEvent('tokensUpdated', { 
+        detail: { tokens: newTokenCount } 
+      }));
+    } catch (error) {
+      console.error('Failed to deduct token:', error);
+      // Don't show error to user since scan was successful
+    }
   }
 
   const handleEmailReport = () => {
@@ -279,6 +294,40 @@ export default function NetworkScanning() {
                           />
                         </div>
                       ))}
+                      
+                      {/* Action buttons inside expanded tool */}
+                      <div className="flex gap-2 pt-4">
+                        <Button 
+                          onClick={handleAction} 
+                          className="bg-blue-500 hover:bg-blue-600 text-white"
+                          disabled={isScanning}
+                        >
+                          {isScanning ? (
+                            <>
+                              <div className="w-4 h-4 mr-2 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                              Scanning...
+                            </>
+                          ) : (
+                            <>
+                              <Search className="w-4 h-4 mr-2" />
+                              Start Scan
+                            </>
+                          )}
+                        </Button>
+
+                        {result && (
+                          <Button
+                            variant="outline"
+                            className="bg-green-500 text-white hover:bg-green-600"
+                            onClick={() => {
+                              document.getElementById("results-section")?.scrollIntoView({ behavior: "smooth" })
+                            }}
+                          >
+                            <Zap className="w-4 h-4 mr-2" />
+                            View Results
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </motion.div>
                 )}
@@ -513,40 +562,7 @@ export default function NetworkScanning() {
         )}
       </AnimatePresence>
       
-      {/* start scan - view result buttons */}
-      <div className="fixed bottom-6 left-6 z-50 flex gap-2">
-        
-        <Button onClick={handleAction} className="bg-blue-500 hover:bg-blue-600 text-white shadow-lg">
-          Start Scan
-          <Search className="w-4 h-4 ml-2" />
-        </Button>
 
-        {/* <Link href="/toolkit/threat-intelligence">
-          <Button
-            variant="outline"
-            className="relative overflow-hidden group hover:shadow-lg hover:shadow-red-500/20 transition-all duration-300 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"
-          >
-            <span className="absolute inset-0 bg-gradient-to-r from-red-500 to-pink-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
-            <AlertTriangle className="w-4 h-4 mr-2" />
-            <span className="relative z-10 text-gray-700 dark:text-gray-300 group-hover:text-red-500 transition-colors duration-300">
-              Deep Dive
-            </span>
-          </Button>
-        </Link> */}
-        
-        {result && (
-          <Button
-            variant="outline"
-            className="bg-green-500 text-white dark:text-white hover:bg-green-700"
-            onClick={() => {
-              document.getElementById("results-section")?.scrollIntoView({ behavior: "smooth" })
-            }}
-          >
-            <Zap className="w-4 h-4 mr-2" />
-            View Results
-          </Button>
-        )}
-      </div>
       {/* Selection Required Dialog  */}
       <Dialog open={showError} onOpenChange={setShowError}>
         <DialogContent>
